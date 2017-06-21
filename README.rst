@@ -1,8 +1,8 @@
 What is this
 ============
 
-This is a skeleton project for Python package.
+TeamCity Configuration Tweaker is a tool aimed to help in mass-editing of build
+configurations (via XML files) to do things, that is really hard to do via web UI,
+which is mostly *single thing* oriented.
 
-.. note::
-
-    First of all I'm doing it for myself! But anyone can reuse it if he want...
+.. To be continued ..

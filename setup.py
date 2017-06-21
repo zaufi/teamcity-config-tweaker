@@ -1,10 +1,24 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
-# Copyright (c) 2017 Alex Turbov <i.zaufi@gmail.com>
+# Install script for TeamCity Configuration Tweaker
 #
+# Copyright (c) 2013-2017 Alex Turbov <i.zaufi@gmail.com>
+#
+# TeamCity Configuration Tweaker is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# TeamCity Configuration Tweaker is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Project specific imports
-# TODO Import package/module w/ `__version__` variable
+import tcct
 
 # Standard imports
 import pathlib
@@ -24,18 +38,15 @@ def get_requirements_from(filename):
     with (sources_dir() / filename).open(encoding='UTF-8') as f:
         return f.readlines()
 
-# TODO Set proper version (or import your package with __version__ variable)
-version = '1.0.0'
-
 setup(
-    name             = name
-  , version          = version
-  , description      = ''
+    name             = 'TeamCity Configuration Tweaker'
+  , version          = tcct.__version__
+  , description      = 'A swiss army knife for TeamCity'
   , long_description = readfile('README.rst')
   , author           = 'Alex Turbov'
   , author_email     = 'I.zaufi@gmail.com'
   , url              = ''
-  , download_url     = 'https://github.com/zaufi/{name}/archive/release/{version}.tar.gz'.format(name, version)
+  , download_url     = 'https://github.com/zaufi/teamcity-config-tweaker/archive/release/{}.tar.gz'.format(tcct.__version__)
   , packages         = find_packages(exclude=('test'))
   , license          = 'GNU General Public License v3 or later (GPLv3+)'
   , classifiers      = [
@@ -45,9 +56,9 @@ setup(
       , 'Natural Language :: English'
       , 'Programming Language :: Python :: 3'
       ]
-  , keywords = ''
-  , install_requires   = get_requirements_from('requirements.txt')
-  , test_suite         = 'test'
-  , tests_require      = get_requirements_from('test-requirements.txt')
-  , zip_safe           = True
+  , keywords         = 'teamcity'
+  , install_requires = get_requirements_from('requirements.txt')
+  , test_suite       = 'test'
+  , tests_require    = get_requirements_from('test-requirements.txt')
+  , zip_safe         = True
   )
