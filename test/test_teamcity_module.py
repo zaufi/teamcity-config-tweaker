@@ -69,5 +69,3 @@ class teamcity_entities_tester:
         # - add a new one
         params['unknown'] = 'now-is-known'
         assert 'unknown' in params
-
-        assert 0
