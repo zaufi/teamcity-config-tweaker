@@ -38,7 +38,7 @@ class app_data:
 
 @with_plugins(iter_entry_points('tcct.commands'))
 @click.group(context_settings={'help_option_names': ['-h','--help']})
-@click.option('--verbose', '-v', default=False, is_flag=True, help='show more details on execution')
+@click.option('--verbose', '-v', default=False, is_flag=True, help='Show more details on execution')
 @click.version_option(version=__version__, prog_name='TeamCity Configuration Tweaker')
 @click.pass_context
 def cli(ctx, verbose):

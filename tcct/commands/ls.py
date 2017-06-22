@@ -36,14 +36,14 @@ def ls(ctx):
     '--headers/--no-headers'
   , default=True
   , is_flag=True
-  , help='show table headers'
+  , help='Show table headers'
   )
 @click.option(
     '--style'
   , '-s'
   , type=click.Choice(['plain', 'simple', 'grid', 'jira', 'rst'])
   , default='simple'
-  , help='table style'
+  , help='Table style'
   )
 @click.argument('input', type=click.File('r'), default='-')
 @click.pass_context

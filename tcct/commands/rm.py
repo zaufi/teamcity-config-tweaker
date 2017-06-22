@@ -24,27 +24,27 @@ import click
 
 @click.group()
 @click.pass_context
-def add(ctx):
+def rm(ctx):
     '''
-        add various things to project, build configuration or template
+        remove various things from project, build configuration or template
     '''
     pass
 
 
-@add.command()
+@rm.command()
 @click.argument('name')
-@click.argument('value')
 @click.argument('input', type=click.File('r'), default='-')
 @click.pass_context
-def param(ctx, name, value, input):
+def param(ctx, name, input):
     '''
-        add parameter to project, build configuration or template
+        get parameter value from project, build configuration or template
     '''
-    ctx.obj.log.debug('Going to add `{}` with value `{}` to {}{}'.
-        format(name, value, doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
     doc = load_entity(input)
-    doc.parameters[name] = value
+
+    ctx.obj.log.debug('Removing parameter `{}` from {}{}'.format(name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
+
+    del doc.parameters[name]
 
     # Print result
     print(str(doc))
