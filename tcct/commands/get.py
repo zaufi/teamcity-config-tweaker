@@ -16,35 +16,29 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Project specific imports
-from .logger import setup_logger
-from .version import __version__
+from ..teamcity import load_entity
 
 # Standard imports
-from pkg_resources import iter_entry_points
-from click_plugins import with_plugins
 import click
 
 
-class app_data:
-    '''
-        Class to keep "global" program data and options.
-
-        It'll be assigned to ``click.context.obj`` member, so all commands
-        may have access to logging facility or program options.
-    '''
-    verbose = False
-    log = None
-
-
-@with_plugins(iter_entry_points('tcct.commands'))
-@click.group(context_settings={'help_option_names': ['-h','--help']})
-@click.option('--verbose', '-v', default=False, is_flag=True, help='show more details on execution')
-@click.version_option(version=__version__, prog_name='TeamCity Configuration Tweaker')
+@click.group()
 @click.pass_context
-def cli(ctx, verbose):
+def get(ctx):
     '''
-        Program entry point
+        get various things from project, build configuration or template
     '''
-    ctx.obj = app_data()
-    ctx.obj.verbose = verbose
-    ctx.obj.log = setup_logger(verbose)
+    pass
+
+
+@get.command()
+@click.argument('name')
+@click.argument('input', type=click.File('r'), default='-')
+@click.pass_context
+def param(ctx, name, input):
+    '''
+        get parameter value from project, build configuration or template
+    '''
+    ctx.obj.log.debug('Getting parameter `{}`'.format(name))
+    doc = load_entity(input)
+    print(str(doc.parameters[name]))

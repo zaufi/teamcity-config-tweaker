@@ -20,29 +20,45 @@ from ..teamcity import load_entity
 
 # Standard imports
 import click
-
+import tabulate
 
 @click.group()
 @click.pass_context
-def add(ctx):
+def ls(ctx):
     '''
-        add various things to project, build configuration or template
+        list various things from project, build configuration or template
     '''
     pass
 
 
-@add.command()
-@click.argument('name')
-@click.argument('value')
+@ls.command()
+@click.option(
+    '--headers/--no-headers'
+  , default=True
+  , is_flag=True
+  , help='show table headers'
+  )
+@click.option(
+    '--style'
+  , '-s'
+  , type=click.Choice(['plain', 'simple', 'grid', 'jira', 'rst'])
+  , default='simple'
+  , help='table style'
+  )
 @click.argument('input', type=click.File('r'), default='-')
 @click.pass_context
-def param(ctx, name, value, input):
+def param(ctx, headers, style, input):
     '''
-        add parameter to project, build configuration or template
+        list parameters from project, build configuration or template
     '''
-    ctx.obj.log.debug('Going to add `{}` with value `{}`'.format(name, value))
-
     doc = load_entity(input)
-    doc.parameters[name] = value
 
-    print(str(doc))
+    ctx.obj.log.debug('List parameters from {}{}'.format(doc.what, ' `' + doc.name + '`' if doc.name else str()))
+
+    aux = {'tablefmt': style }
+
+    if headers:
+        aux['headers'] = ['key', 'value']
+
+    if len(doc.parameters):
+        print(tabulate.tabulate(list(doc.parameters), **aux))

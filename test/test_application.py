@@ -35,4 +35,3 @@ class application_tester:
 
         out, err = capfd.readouterr()
         assert 'Usage:' in out
-

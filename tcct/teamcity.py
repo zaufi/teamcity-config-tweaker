@@ -50,6 +50,15 @@ class parameter:
         raise RuntimeError('Setting value is not implemented yet')
 
 
+    def __iter__(self):
+        yield self.name
+        yield self.value
+
+
+    def __len__(self):
+        return 2
+
+
     def __str__(self):
         return '{}: {}'.format(self.name, self.value)
 
@@ -60,8 +69,9 @@ class parameter:
 
 class _parameter_iterator:
 
-    def __init__(self, node_iter):
+    def __init__(self, node_iter, value_transformer):
         self._node_iter = node_iter
+        self._value_transformer = value_transformer
 
 
     def __iter__(self):
@@ -70,18 +80,26 @@ class _parameter_iterator:
 
     def __next__(self):
         param_node = next(self._node_iter)
-        return parameter(param_node)
+        param = parameter(param_node)
+        return self._value_transformer(param)
 
 
-
-class _parameters_dict:
+class _parameters_collection:
 
     def __init__(self, node):
         self._node = node
 
 
     def __iter__(self):
-        return _parameter_iterator(self._node.iterchildren())
+        return _parameter_iterator(self._node.iterchildren(), lambda x: x)
+
+
+    def items(self):
+        return _parameter_iterator(self._node.iterchildren(), lambda x: (x.name, x.value))
+
+
+    def keys(self):
+        return _parameter_iterator(self._node.iterchildren(), lambda x: x.name)
 
 
     def __getitem__(self, key):
@@ -100,6 +118,11 @@ class _parameters_dict:
         else:
             # Update existed
             param.attrib['value'] = value
+
+
+    def __delitem__(self, key):
+        param = self._node.find('param[@name="{}"]'.format(key))
+        self._node.remove(param)
 
 
     def __contains__(self, key):
@@ -123,8 +146,16 @@ class abstract_entity(metaclass=abc.ABCMeta):
         It is capable to load/store it from/to XML file and
         exposure ``parameters`` property.
     '''
-    def __init__(self, tree):
+    def __init__(self, tree, what):
         self._tree = tree
+        self.what = what
+
+
+    @property
+    def name(self):
+        name_node = self._tree.getroot().find('name')
+        return name_node.text if name_node is not None else str()
+
 
     @abc.abstractproperty
     def parameters(self):
@@ -137,44 +168,38 @@ class abstract_entity(metaclass=abc.ABCMeta):
 
 class project(abstract_entity):
 
-    def __init__(self, tree):
-        super().__init__(tree)
-
-
     @property
     def parameters(self):
         params = self._tree.getroot().find('parameters')
         assert params is not None
-        return _parameters_dict(params)
+        return _parameters_collection(params)
 
 
 class build_configuration(abstract_entity):
 
-    def __init__(self, tree):
-        super().__init__(tree)
-
-
     @property
     def parameters(self):
         params = self._tree.getroot().find('settings/parameters')
         assert params is not None
-        return _parameters_dict(params)
+        return _parameters_collection(params)
 
 
 class build_template(abstract_entity):
 
-    def __init__(self, tree):
-        super().__init__(tree)
-
-
     @property
     def parameters(self):
         params = self._tree.getroot().find('settings/parameters')
         assert params is not None
-        return _parameters_dict(params)
+        return _parameters_collection(params)
 
 
 def load_entity(file_io):
+    '''
+        Factory function to produce one of supported entities:
+            - project
+            - build configuration
+            - build template
+    '''
     parser = etree.XMLParser(remove_blank_text=True)
     tree = etree.parse(file_io, parser)
     root = tree.getroot()
@@ -182,14 +207,17 @@ def load_entity(file_io):
     # Check what we have:
     if root.tag == 'project':
         cls = project
+        what = 'project'
 
     elif root.tag == 'build-type':
         cls = build_configuration
+        what = 'build configuration'
 
     elif root.tag == 'template':
         cls = build_template
+        what = 'build template'
 
     else:
         raise RuntimeError('Unknown XML input')
 
-    return cls(tree)
+    return cls(tree, what=what)

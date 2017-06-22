@@ -31,9 +31,9 @@ class teamcity_entities_tester:
     def empty_project_test(self):
         ent = load_entity(make_data_filename('empty-project-config.xml').open('r'))
 
+        assert ent.what == 'project'
+        assert ent.name == 'Unit-Test'
         assert len(ent.parameters) == 0
-
-        assert 0
 
 
     def non_empty_project_test(self):
@@ -45,8 +45,17 @@ class teamcity_entities_tester:
         assert len(params) == 3
 
         # check iteration protocol
+        # - iterate over list of parameters
         for i in params:
             print('i={}'.format(repr(i)))
+
+        # - iterate over dict of key-value pairs
+        for k, v in params.items():
+            print('{}={}'.format(k, v))
+
+        # - iterate over parameter names
+        for k in params.keys():
+            print('{}'.format(k))
 
         # check __contains__
         assert 'some-param' in params
@@ -66,6 +75,17 @@ class teamcity_entities_tester:
         some = params['some-param']
         assert some.value == 'new-value'
 
+        # check `parameter` conversion to `tuple`
+        assert len(some) == 2
+        kvp = tuple(some)
+        assert kvp[0] == 'some-param'
+        assert kvp[1] == 'new-value'
+
         # - add a new one
         params['unknown'] = 'now-is-known'
         assert 'unknown' in params
+        assert len(params) == 4
+
+        # check __delitem__
+        del params['unknown']
+        assert len(params) == 3

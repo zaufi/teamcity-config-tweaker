@@ -3,3 +3,4 @@ click_plugins
 exitstatus
 lxml
 setuptools
+tabulate
