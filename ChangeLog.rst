@@ -17,6 +17,12 @@ Added
 ~~~~~
 
 - Add basic files required for Python packaging
+- Add commands to manupulate parameters for TeamCity project, build configuration
+  and templates:
+    - ``tcct add param``
+    - ``tcct get param``
+    - ``tcct ls param``
+    - ``tcct rm param``
 
 
-.. _Unreleased: https://github.com/zaufi/skeleton.py/release/1.0.0...HEAD
+.. _Unreleased: https://github.com/zaufi/teamcity-config-tweaker/release/1.0.0...HEAD
