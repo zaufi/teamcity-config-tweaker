@@ -1,3 +1,4 @@
 click
 exitstatus
+lxml
 setuptools

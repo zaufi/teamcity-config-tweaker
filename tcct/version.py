@@ -16,6 +16,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Project specific imports
-from .version import __version__
 
 # Standard imports
+
+__version__ = '0.1.0'

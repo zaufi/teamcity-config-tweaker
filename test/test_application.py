@@ -15,7 +15,24 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+''' Unit tests for application '''
+
 # Project specific imports
-from .version import __version__
+from context import argv
+from tcct.cli import cli
 
 # Standard imports
+import pathlib
+import pytest
+
+
+class application_tester:
+
+    @argv('--help')
+    @pytest.mark.usefixtures('prepare_cli')
+    def help_test(self, capfd):
+        cli()
+
+        out, err = capfd.readouterr()
+        assert 'Usage:' in out
+

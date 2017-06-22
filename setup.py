@@ -2,7 +2,7 @@
 #
 # Install script for TeamCity Configuration Tweaker
 #
-# Copyright (c) 2013-2017 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2017 Alex Turbov <i.zaufi@gmail.com>
 #
 # TeamCity Configuration Tweaker is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -39,15 +39,23 @@ def get_requirements_from(filename):
         return f.readlines()
 
 setup(
-    name             = 'TeamCity Configuration Tweaker'
+    name             = 'teamcity-config-tweaker'
   , version          = tcct.__version__
-  , description      = 'A swiss army knife for TeamCity'
+  , description      = 'TeamCity Configuration Tweaker'
   , long_description = readfile('README.rst')
   , author           = 'Alex Turbov'
   , author_email     = 'I.zaufi@gmail.com'
   , url              = ''
   , download_url     = 'https://github.com/zaufi/teamcity-config-tweaker/archive/release/{}.tar.gz'.format(tcct.__version__)
   , packages         = find_packages(exclude=('test'))
+  , entry_points       = {
+        'console_scripts': [
+            'tcct = tcct.cli:cli'
+          ]
+      , 'tcct.commands': [
+            'add = tcct.commands.add:add'
+          ]
+      }
   , license          = 'GNU General Public License v3 or later (GPLv3+)'
   , classifiers      = [
         'Development Status :: 4 - Beta'

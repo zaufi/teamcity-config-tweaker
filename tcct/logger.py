@@ -16,6 +16,26 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Project specific imports
-from .version import __version__
 
 # Standard imports
+import logging
+
+
+def setup_logger(verbose):
+    # Create logger
+    logger = logging.getLogger('tcct')
+
+    logger.setLevel(logging.DEBUG if verbose else logging.INFO)
+
+    # Create console handler and set level to debug
+    handler = logging.StreamHandler()                       # NOTE Write everything to `stderr`!
+    handler.setLevel(logging.DEBUG if verbose else logging.INFO)
+
+    # Create formatter
+    formatter = logging.Formatter('%(name)s[%(levelname)s]: %(message)s')
+    handler.setFormatter(formatter)
+
+    # Add handler to logger
+    logger.addHandler(handler)
+
+    return logger

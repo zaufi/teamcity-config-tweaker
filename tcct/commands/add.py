@@ -16,6 +16,33 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Project specific imports
-from .version import __version__
+from ..teamcity import load_entity
 
 # Standard imports
+import click
+
+
+@click.group()
+@click.pass_context
+def add(ctx):
+    '''
+        add various things to project, build configuration or template
+    '''
+    pass
+
+
+@add.command()
+@click.argument('name')
+@click.argument('value')
+@click.argument('input', type=click.File('r'), default='-')
+@click.pass_context
+def param(ctx, name, value, input):
+    '''
+        add parameter to project, build configuration or template
+    '''
+    ctx.obj.log.info('Going to add `{}` with value `{}`'.format(name, value))
+
+    doc = load_entity(input)
+    doc.parameters[name] = value
+
+    print(str(doc))
