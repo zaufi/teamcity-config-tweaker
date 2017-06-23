@@ -50,6 +50,7 @@ def param(ctx, old_name, new_name, input):
             .. todo:: Implement via real replace name of the ``param`` element
         '''
         doc.parameters[new_name] = doc.parameters[old_name].value
+        del doc.parameters[old_name]
 
     elif ctx.obj.fail_if_missed:
         raise RuntimeError('Parameter `{}` not found in {}{}'.format(old_name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
