@@ -32,6 +32,7 @@ class app_data:
         It'll be assigned to ``click.context.obj`` member, so all commands
         may have access to logging facility or program options.
     '''
+    fail_if_missed = False
     verbose = False
     log = None
 
@@ -39,12 +40,14 @@ class app_data:
 @click_plugins.with_plugins(pkg_resources.iter_entry_points('tcct.commands'))
 @click.group(context_settings={'help_option_names': ['-h','--help']})
 @click.option('--verbose', '-v', default=False, is_flag=True, help='Show more details on execution')
+@click.option('--fail-if-missed/--no-fail-if-missed', '-m/-M', default=False, is_flag=True, help='Return failure if something has missed')
 @click.version_option(version=__version__, prog_name='TeamCity Configuration Tweaker')
 @click.pass_context
-def cli(ctx, verbose):
+def cli(ctx, verbose, fail_if_missed):
     '''
         Program entry point
     '''
     ctx.obj = app_data()
+    ctx.obj.fail_if_missed = fail_if_missed
     ctx.obj.verbose = verbose
     ctx.obj.log = setup_logger(verbose)

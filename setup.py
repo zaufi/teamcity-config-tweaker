@@ -57,6 +57,7 @@ setup(
           , 'get = tcct.commands.get:get'
           , 'ls = tcct.commands.ls:ls'
           , 'rm = tcct.commands.rm:rm'
+          , 'ren = tcct.commands.ren:ren'
           ]
       }
   , license          = 'GNU General Public License v3 or later (GPLv3+)'

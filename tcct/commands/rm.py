@@ -44,7 +44,11 @@ def param(ctx, name, input):
 
     ctx.obj.log.debug('Removing parameter `{}` from {}{}'.format(name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
-    del doc.parameters[name]
+    if name in doc.parameters:
+        del doc.parameters[name]
+
+    elif ctx.obj.fail_if_missed:
+        raise RuntimeError('Parameter `{}` not found in {}{}'.format(name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
     # Print result
     print(str(doc))

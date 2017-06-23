@@ -23,6 +23,7 @@ Added
     - ``tcct get param``
     - ``tcct ls param``
     - ``tcct rm param``
+    - ``tcct ren param``
 
 
 .. _Unreleased: https://github.com/zaufi/teamcity-config-tweaker/release/1.0.0...HEAD

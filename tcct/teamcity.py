@@ -22,6 +22,9 @@ import abc
 from lxml import etree
 
 
+_XML_PI = '<?xml version="1.0" encoding="UTF-8"?>\n'
+
+
 class parameter:
 
     def __init__(self, node):
@@ -30,13 +33,11 @@ class parameter:
 
     @property
     def name(self):
+        '''
+            Read-only `name` property.
+        '''
         assert 'name' in self._node.attrib
         return self._node.get('name')
-
-
-    @name.setter
-    def name(self):
-        raise RuntimeError('Setting name is not implemented yet')
 
 
     @property
@@ -46,8 +47,8 @@ class parameter:
 
 
     @value.setter
-    def value(self):
-        raise RuntimeError('Setting value is not implemented yet')
+    def value(self, val):
+        self._node.attrib['value'] = str(val)
 
 
     def __iter__(self):
@@ -122,7 +123,8 @@ class _parameters_collection:
 
     def __delitem__(self, key):
         param = self._node.find('param[@name="{}"]'.format(key))
-        self._node.remove(param)
+        if param is not None:
+            self._node.remove(param)
 
 
     def __contains__(self, key):
@@ -163,7 +165,8 @@ class abstract_entity(metaclass=abc.ABCMeta):
 
 
     def __str__(self):
-        return etree.tostring(self._tree, encoding='UTF-8', pretty_print=True, xml_declaration=True).decode('UTF-8')
+        out = etree.tostring(self._tree, encoding=str, pretty_print=True)
+        return _XML_PI + out.replace('/>', ' />')
 
 
 class project(abstract_entity):

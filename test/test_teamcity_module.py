@@ -81,6 +81,14 @@ class teamcity_entities_tester:
         assert kvp[0] == 'some-param'
         assert kvp[1] == 'new-value'
 
+        # check value assign to `parameter`
+        some.value = 'new-new-value'
+
+        # check `name` constantness
+        with pytest.raises(AttributeError) as ex:
+            some.name = 'new'
+        assert "can't set attribute" in str(ex)
+
         # - add a new one
         params['unknown'] = 'now-is-known'
         assert 'unknown' in params

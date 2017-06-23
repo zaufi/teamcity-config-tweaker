@@ -41,4 +41,9 @@ def param(ctx, name, input):
     '''
     ctx.obj.log.debug('Getting parameter `{}`'.format(name))
     doc = load_entity(input)
-    print(str(doc.parameters[name]))
+
+    if name in doc.parameters:
+        print(str(doc.parameters[name].value))
+
+    elif ctx.obj.fail_if_missed:
+        raise RuntimeError('Parameter `{}` not found in {}{}'.format(name, doc.what, ' `' + doc.name + '`' if doc.name else str()))

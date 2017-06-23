@@ -24,28 +24,35 @@ import click
 
 @click.group()
 @click.pass_context
-def add(ctx):
+def ren(ctx):
     '''
         add various things to project, build configuration or template
     '''
     pass
 
 
-@add.command()
-@click.argument('name')
-@click.argument('value')
+@ren.command()
+@click.argument('old-name')
+@click.argument('new-name')
 @click.argument('input', type=click.File('r'), default='-')
 @click.pass_context
-def param(ctx, name, value, input):
+def param(ctx, old_name, new_name, input):
     '''
         add parameter to project, build configuration or template
     '''
     doc = load_entity(input)
 
-    ctx.obj.log.debug('Going to add `{}` with value `{}` to {}{}'.
-        format(name, value, doc.what, ' `' + doc.name + '`' if doc.name else str()))
+    ctx.obj.log.debug('Going to rename `{}` to `{}` in {}{}'.
+        format(old_name, new_name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
-    doc.parameters[name] = value
+    if old_name in doc.parameters:
+        '''
+            .. todo:: Implement via real replace name of the ``param`` element
+        '''
+        doc.parameters[new_name] = doc.parameters[old_name].value
+
+    elif ctx.obj.fail_if_missed:
+        raise RuntimeError('Parameter `{}` not found in {}{}'.format(old_name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
     # Print result
     print(str(doc))

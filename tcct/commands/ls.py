@@ -34,6 +34,7 @@ def ls(ctx):
 @ls.command()
 @click.option(
     '--headers/--no-headers'
+  , ' /-H'
   , default=True
   , is_flag=True
   , help='Show table headers'

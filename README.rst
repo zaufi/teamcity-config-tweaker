@@ -6,3 +6,9 @@ configurations (via XML files) to do things, that is really hard to do via web U
 which is mostly *single thing* oriented.
 
 .. To be continued ..
+
+TODO
+====
+
+- Add options ``--before`` and ``--after`` for ``add param`` command
+
