@@ -27,5 +27,6 @@ import sys
 def main():
     try:
         cli.main(sys.argv[1:], standalone_mode=False)
+
     except RuntimeError as ex:
         click.echo(click.style('Error: {}'.format(str(ex)), fg='red'))

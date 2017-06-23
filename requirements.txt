@@ -3,4 +3,5 @@ click_plugins
 exitstatus
 lxml
 setuptools
+sphinx_rtd_theme
 tabulate
