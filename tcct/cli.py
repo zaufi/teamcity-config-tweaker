@@ -20,9 +20,9 @@ from .logger import setup_logger
 from .version import __version__
 
 # Standard imports
-from pkg_resources import iter_entry_points
-from click_plugins import with_plugins
 import click
+import click_plugins
+import pkg_resources
 
 
 class app_data:
@@ -36,7 +36,7 @@ class app_data:
     log = None
 
 
-@with_plugins(iter_entry_points('tcct.commands'))
+@click_plugins.with_plugins(pkg_resources.iter_entry_points('tcct.commands'))
 @click.group(context_settings={'help_option_names': ['-h','--help']})
 @click.option('--verbose', '-v', default=False, is_flag=True, help='Show more details on execution')
 @click.version_option(version=__version__, prog_name='TeamCity Configuration Tweaker')

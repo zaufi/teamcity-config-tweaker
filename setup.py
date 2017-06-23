@@ -50,7 +50,7 @@ setup(
   , packages         = find_packages(exclude=('test'))
   , entry_points       = {
         'console_scripts': [
-            'tcct = tcct.cli:cli'
+            'tcct = tcct.main:main'
           ]
       , 'tcct.commands': [
             'add = tcct.commands.add:add'
