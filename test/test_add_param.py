@@ -42,3 +42,43 @@ class add_parameter_tester:
         cli()
         out, err = capfd.readouterr()
         assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'some-param', 'new-value', str(make_data_filename('non-empty-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def replace_value_test(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'param-with-spec', 'new-value', str(make_data_filename('non-empty-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def replace_value_of_spec_param_test(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'empty-param', 'now-non-empty', str(make_data_filename('non-empty-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def replace_empty_value_test(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'empty-param', '"now-quoted-non-empty"', str(make_data_filename('non-empty-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def add_quoted_value_test(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', '--', 'empty-param', '-now-quoted-non-empty', str(make_data_filename('non-empty-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def add_leading_dash_and_spaces_value_test(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()

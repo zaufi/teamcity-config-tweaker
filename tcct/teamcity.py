@@ -112,6 +112,9 @@ class _parameters_collection:
 
 
     def __setitem__(self, key, value):
+        '''
+            TODO If value is multiline, it should be added in other way!
+        '''
         param = self._node.find('param[@name="{}"]'.format(key))
         if param is None:
             # Add new item
