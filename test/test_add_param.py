@@ -18,7 +18,7 @@
 ''' Unit tests for application '''
 
 # Project specific imports
-from context import argv
+from context import argv, make_data_filename
 from tcct.main import main as cli
 
 # Standard imports
@@ -26,21 +26,19 @@ import pathlib
 import pytest
 
 
-class application_tester:
+class add_parameter_tester:
 
-    @argv('--help')
+    @argv('add', 'param', 'test', 'test-value', str(make_data_filename('empty-project-config.xml')))
     @pytest.mark.usefixtures('prepare_cli')
-    def help_test(self, capfd):
+    def to_empty_project_test(self, capfd, expected_out):
         cli()
-
         out, err = capfd.readouterr()
-        assert 'Usage:' in out
+        assert expected_out == out.strip()
 
 
-    @argv('invalid-command')
+    @argv('add', 'param', 'test', 'test-value', str(make_data_filename('non-empty-params-project-config.xml')))
     @pytest.mark.usefixtures('prepare_cli')
-    def help_test(self, capfd):
+    def to_non_empty_project_test(self, capfd, expected_out):
         cli()
-
         out, err = capfd.readouterr()
-        assert 'Error: No such command "invalid-command".' in err
+        assert expected_out == out.strip()

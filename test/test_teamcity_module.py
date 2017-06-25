@@ -32,7 +32,7 @@ class teamcity_entities_tester:
         ent = load_entity(make_data_filename('empty-project-config.xml').open('r'))
 
         assert ent.what == 'project'
-        assert ent.name == 'Unit-Test'
+        assert ent.name == 'Unit Test'
         assert len(ent.parameters) == 0
 
 

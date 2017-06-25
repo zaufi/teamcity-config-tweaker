@@ -19,6 +19,7 @@
 
 # Standard imports
 import contextlib
+import inspect
 import os
 import pathlib
 import sys
@@ -30,16 +31,20 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 _data_dir = pathlib.Path(__file__).parent / 'data'
 
 
-def data_dir_base():
+def data_dir():
     return _data_dir
 
 
-def output_dir_base():
-    return data_dir_base() / 'output'
+def output_dir():
+    return data_dir() / 'output'
+
+
+def expected_results_dir():
+    return data_dir() / 'expected-results'
 
 
 def make_data_filename(filename):
-    return data_dir_base() / filename
+    return data_dir() / filename
 
 
 def argv(*args):
@@ -48,6 +53,7 @@ def argv(*args):
         return fn
 
     return _inner
+
 
 @contextlib.contextmanager
 def change_work_dir(directory):

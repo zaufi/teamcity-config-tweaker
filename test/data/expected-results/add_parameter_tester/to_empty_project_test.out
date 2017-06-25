@@ -2,6 +2,8 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="32a455c8-41e9-4b09-ad96-1bf2fa5d85e3" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/10.0/project-config.xsd">
   <name>Unit Test</name>
   <description />
-  <parameters />
+  <parameters>
+    <param name="test" value="test-value" />
+  </parameters>
   <cleanup />
 </project>
