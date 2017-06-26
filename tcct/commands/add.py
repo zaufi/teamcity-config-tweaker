@@ -26,7 +26,7 @@ import click
 @click.pass_context
 def add(ctx):
     '''
-        add various things to project, build configuration or template
+        add various things to a project, build configuration or template
     '''
     pass
 
@@ -38,7 +38,7 @@ def add(ctx):
 @click.pass_context
 def param(ctx, name, value, input):
     '''
-        add parameter to project, build configuration or template
+        add parameter to a project, build configuration or template
     '''
     doc = load_document(input)
 

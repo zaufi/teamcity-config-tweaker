@@ -55,9 +55,9 @@ setup(
       , 'tcct.commands': [
             'add = tcct.commands.add:add'
           , 'get = tcct.commands.get:get'
-          , 'ls = tcct.commands.ls:ls'
-          , 'rm = tcct.commands.rm:rm'
-          , 'ren = tcct.commands.ren:ren'
+          , 'list = tcct.commands.list:ls'
+          , 'remove = tcct.commands.remove:remove'
+          , 'rename = tcct.commands.rename:rename'
           ]
       }
   , license          = 'GNU General Public License v3 or later (GPLv3+)'

@@ -24,33 +24,38 @@ import click
 
 
 @click.group()
-@aliases('remove', 'del')
+@aliases('ren')
 @click.pass_context
-def rm(ctx):
+def rename(ctx):
     '''
-        remove various things from project, build configuration or template
+        rename various things in a project, build configuration or template
     '''
     pass
 
 
-@rm.command()
-@click.argument('name')
+@rename.command()
+@click.argument('old-name')
+@click.argument('new-name')
 @click.argument('input', type=click.File('r'), default='-')
 @click.pass_context
-def param(ctx, name, input):
+def param(ctx, old_name, new_name, input):
     '''
-        get parameter value from project, build configuration or template
+        rename parameter in a project, build configuration or template
     '''
-
     doc = load_document(input)
 
-    ctx.obj.log.debug('Removing parameter `{}` from {}{}'.format(name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
+    ctx.obj.log.debug('Going to rename `{}` to `{}` in {}{}'.
+        format(old_name, new_name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
-    if name in doc.parameters:
-        del doc.parameters[name]
+    if old_name in doc.parameters:
+        '''
+            .. todo:: Implement via real replace name of the ``param`` element
+        '''
+        doc.parameters[new_name] = doc.parameters[old_name].value
+        del doc.parameters[old_name]
 
     elif ctx.obj.fail_if_missed:
-        raise RuntimeError('Parameter `{}` not found in {}{}'.format(name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
+        raise RuntimeError('Parameter `{}` not found in {}{}'.format(old_name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
     # Print result
     print(str(doc))

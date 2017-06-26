@@ -26,7 +26,7 @@ import click
 @click.pass_context
 def get(ctx):
     '''
-        get various things from project, build configuration or template
+        get various things from a project, build configuration or template
     '''
     pass
 
@@ -37,7 +37,7 @@ def get(ctx):
 @click.pass_context
 def param(ctx, name, input):
     '''
-        get parameter value from project, build configuration or template
+        get parameter value from a project, build configuration or template
     '''
     ctx.obj.log.debug('Getting parameter `{}`'.format(name))
     doc = load_document(input)

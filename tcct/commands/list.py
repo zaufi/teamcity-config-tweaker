@@ -33,7 +33,7 @@ import pygments.formatters
 @click.pass_context
 def ls(ctx):
     '''
-        list various things from project, build configuration or template
+        list various things from a project, build configuration or template
     '''
     pass
 
@@ -57,7 +57,7 @@ def ls(ctx):
 @click.pass_context
 def param(ctx, headers, style, input):
     '''
-        list parameters from project, build configuration or template
+        list parameters from a project, build configuration or template
     '''
     doc = load_document(input)
 
@@ -78,7 +78,7 @@ def param(ctx, headers, style, input):
 @click.pass_context
 def runners(ctx, details, input):
     '''
-        list build runners build configuration or template
+        list build runners from a build configuration or template
     '''
     doc = load_document(input)
 
