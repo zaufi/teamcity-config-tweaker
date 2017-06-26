@@ -38,13 +38,26 @@ class parameter:
 
     @property
     def value(self):
-        assert 'value' in self._node.attrib
-        return self._node.get('value')
+        if 'value' in self._node.attrib:
+            return self._node.attrib['value']
+
+        assert self._node.text
+
+        return self._node.text
 
 
     @value.setter
     def value(self, val):
-        self._node.attrib['value'] = str(val)
+        _value = str(val).strip()
+        if '\n' in _value:
+            # Remove value if present
+            if 'value' in self._node.attrib:
+                del self._node.attrib['value']
+            # Set value as element's text
+            self._node.text = etree.CDATA(_value)
+
+        else:
+            self._node.attrib['value'] = _value
 
 
     def __iter__(self):
@@ -100,6 +113,9 @@ class parameters_collection:
 
 
     def __getitem__(self, key):
+        '''
+            TODO Validate key?!
+        '''
         param = self._node.find('param[@name="{}"]'.format(key))
         if param is not None:
             return parameter(param)
@@ -109,18 +125,23 @@ class parameters_collection:
 
     def __setitem__(self, key, value):
         '''
-            TODO If value is multiline, it should be added in other way!
+            TODO Validate key?!
         '''
         param = self._node.find('param[@name="{}"]'.format(key))
         if param is None:
             # Add new item
-            self._node.append(etree.Element('param', {'name': key, 'value': value}))
+            e = etree.Element('param', {'name': key, 'value': str()})
+            parameter(e).value = value
+            self._node.append(e)
         else:
             # Update existed
-            param.attrib['value'] = value
+            parameter(param).value = value
 
 
     def __delitem__(self, key):
+        '''
+            TODO Validate key?!
+        '''
         param = self._node.find('param[@name="{}"]'.format(key))
         if param is not None:
             self._node.remove(param)
@@ -128,6 +149,9 @@ class parameters_collection:
 
     def __contains__(self, key):
         param = self._node.find('param[@name="{}"]'.format(key))
+        '''
+            TODO Validate key?!
+        '''
         return param is not None
 
 

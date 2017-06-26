@@ -3,7 +3,9 @@
   <name>Unit Test</name>
   <description>Project with some parameters</description>
   <parameters>
-    <param name="param-with-spec" value="test" spec="text description='description' label='label' validationMode='any' display='normal'" />
+    <param name="param-with-spec" spec="text description='description' label='label' validationMode='any' display='normal'"><![CDATA[some
+test
+value]]></param>
     <param name="empty-param" value="" />
     <param name="some-param" value="some-value" />
   </parameters>

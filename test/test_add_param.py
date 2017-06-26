@@ -82,3 +82,59 @@ class add_parameter_tester:
         cli()
         out, err = capfd.readouterr()
         assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'test', 'some\ntest\nvalue', str(make_data_filename('empty-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def multiline_param_test_1(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'new-param', 'some\ntest\nvalue', str(make_data_filename('non-empty-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def multiline_param_test_2(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'some-param', 'some\ntest\nvalue', str(make_data_filename('non-empty-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def multiline_param_test_3(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'param-with-spec', 'some\ntest\nvalue', str(make_data_filename('non-empty-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def multiline_param_test_4(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'new-param', 'some\ntest\nvalue', str(make_data_filename('multiline-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def multiline_param_test_5(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'some-param', 'some\ntest\nvalue', str(make_data_filename('multiline-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def multiline_param_test_6(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
+
+    @argv('add', 'param', 'multiline', 'some\ntest\nvalue', str(make_data_filename('multiline-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def multiline_param_test_7(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()

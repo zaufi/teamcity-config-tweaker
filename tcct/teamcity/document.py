@@ -17,6 +17,8 @@
 
 # Project specific imports
 from .param import parameters_collection
+from .runner import build_runners_collection
+
 # Standard imports
 import abc
 from lxml import etree
@@ -52,6 +54,11 @@ class abstract_entity(metaclass=abc.ABCMeta):
         pass
 
 
+    @abc.abstractproperty
+    def build_runners(self):
+        pass
+
+
     def __str__(self):
         out = etree.tostring(self._tree, encoding=str, pretty_print=True)
         return _XML_PI + out.replace('/>', ' />')
@@ -66,6 +73,11 @@ class project(abstract_entity):
         return parameters_collection(params)
 
 
+    @property
+    def build_runners(self):
+        return []
+
+
 class build_configuration(abstract_entity):
 
     @property
@@ -73,6 +85,12 @@ class build_configuration(abstract_entity):
         params = self._tree.getroot().find('settings/parameters')
         assert params is not None
         return parameters_collection(params)
+
+
+    @property
+    def build_runners(self):
+        runners = self._tree.getroot().find('settings/build-runners')
+        return build_runners_collection(runners) if runners is not None else []
 
 
 class build_template(abstract_entity):
@@ -84,6 +102,12 @@ class build_template(abstract_entity):
         return parameters_collection(params)
 
 
+    @property
+    def build_runners(self):
+        runners = self._tree.getroot().find('settings/build-runners')
+        return build_runners_collection(runners) if runners is not None else []
+
+
 def load_document(file_io):
     '''
         Factory function to produce one of supported entities:
@@ -91,7 +115,7 @@ def load_document(file_io):
             - build configuration
             - build template
     '''
-    parser = etree.XMLParser(remove_blank_text=True)
+    parser = etree.XMLParser(remove_blank_text=True, strip_cdata=False)
     tree = etree.parse(file_io, parser)
     root = tree.getroot()
 

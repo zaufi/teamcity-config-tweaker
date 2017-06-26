@@ -21,6 +21,11 @@ from ..teamcity import load_document
 # Standard imports
 import click
 import tabulate
+import textwrap
+import pygments
+import pygments.lexers
+import pygments.formatters
+
 
 @click.group()
 @click.pass_context
@@ -63,3 +68,41 @@ def param(ctx, headers, style, input):
 
     if len(doc.parameters):
         print(tabulate.tabulate(list(doc.parameters), **aux))
+
+
+@ls.command()
+@click.argument('input', type=click.File('r'), default='-')
+@click.pass_context
+def runners(ctx, input):
+    '''
+        list build runners build configuration or template
+    '''
+    doc = load_document(input)
+
+    if doc.what == 'project':
+        if ctx.obj.fail_if_missed:
+            raise RuntimeError('TeamCity project is not suitable for this operation')
+        return
+
+    ctx.obj.log.debug('List build runners from {}{}'.format(doc.what, ' `' + doc.name + '`' if doc.name else str()))
+
+    for runner in doc.build_runners:
+        # TODO Get term size?
+        print('---{:-<80}'.format('[ ' + str(runner) + ' ]'))
+
+        if runner.type == 'simpleRunner':
+
+            if 'teamcity.build.workingDir' in runner.parameters:
+                print('Run at `{}`'.format(runner.parameters['teamcity.build.workingDir'].value))
+
+            if 'command.executable' in runner.parameters:
+                print('Command: {} {}'.format(runner.parameters['command.executable'].value, runner.parameters['command.parameters'].value))
+
+            elif 'script.content' in runner.parameters:
+                script = runner.parameters['script.content'].value
+                lexer = pygments.lexers.get_lexer_by_name('shell', stripall=True)
+                formatter = pygments.formatters.get_formatter_by_name('console')
+                script = pygments.highlight(script, lexer, formatter)
+                print('\n' + script)
+
+        print()

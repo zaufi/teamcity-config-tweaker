@@ -6,6 +6,9 @@
     <param name="param-with-spec" value="test" spec="text description='description' label='label' validationMode='any' display='normal'" />
     <param name="empty-param" value="" />
     <param name="some-param" value="some-value" />
+    <param name="new-param"><![CDATA[some
+test
+value]]></param>
   </parameters>
   <project-extensions />
   <cleanup />

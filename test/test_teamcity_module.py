@@ -34,6 +34,7 @@ class teamcity_entities_tester:
         assert ent.what == 'project'
         assert ent.name == 'Unit Test'
         assert len(ent.parameters) == 0
+        assert len(ent.build_runners) == 0
 
 
     def non_empty_project_test(self):
@@ -89,6 +90,7 @@ class teamcity_entities_tester:
             some.name = 'new'
         assert "can't set attribute" in str(ex)
 
+        # check __setitem__
         # - add a new one
         params['unknown'] = 'now-is-known'
         assert 'unknown' in params
@@ -97,3 +99,37 @@ class teamcity_entities_tester:
         # check __delitem__
         del params['unknown']
         assert len(params) == 3
+
+
+    def multiline_params_project_test(self):
+        ent = load_document(make_data_filename('multiline-params-project-config.xml').open('r'))
+
+        params = ent.parameters
+
+        assert len(params) == 3
+        for k, v in params.items():
+            print('{}={}'.format(k, v))
+
+        assert params['some-param'].value == 'some-value'
+        assert params['multiline'].value == 'some\ntest\nvalue'
+        assert params['empty-param'].value == ''
+
+
+    def build_runners_test(self):
+        ent = load_document(make_data_filename('sample-build-template.xml').open('r'))
+
+        runners = ent.build_runners
+        print('runners={}'.format(repr(runners)))
+
+        assert len(runners) == 1
+
+        runner = runners[0]
+
+        print('runner={}'.format(repr(runner)))
+        print('runner.parameters={}'.format(repr(runner.parameters)))
+
+        # - iterate over dict of key-value pairs
+        for k, v in runner.parameters.items():
+            print('{}={}'.format(k, v))
+
+        assert 0
