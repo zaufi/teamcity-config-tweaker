@@ -16,6 +16,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Project specific imports
+from ..click import aliases
 from ..teamcity import load_document
 
 # Standard imports
@@ -28,6 +29,7 @@ import pygments.formatters
 
 
 @click.group()
+@aliases('list')
 @click.pass_context
 def ls(ctx):
     '''
