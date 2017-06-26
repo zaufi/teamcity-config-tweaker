@@ -16,7 +16,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Project specific imports
-from ..teamcity import load_entity
+from ..teamcity import load_document
 
 # Standard imports
 import click
@@ -52,7 +52,7 @@ def param(ctx, headers, style, input):
     '''
         list parameters from project, build configuration or template
     '''
-    doc = load_entity(input)
+    doc = load_document(input)
 
     ctx.obj.log.debug('List parameters from {}{}'.format(doc.what, ' `' + doc.name + '`' if doc.name else str()))
 

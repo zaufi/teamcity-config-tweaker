@@ -16,7 +16,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Project specific imports
-from ..teamcity import load_entity
+from ..teamcity import load_document
 
 # Standard imports
 import click
@@ -40,7 +40,7 @@ def param(ctx, name, input):
         get parameter value from project, build configuration or template
     '''
 
-    doc = load_entity(input)
+    doc = load_document(input)
 
     ctx.obj.log.debug('Removing parameter `{}` from {}{}'.format(name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
 

@@ -199,7 +199,7 @@ class build_template(abstract_entity):
         return _parameters_collection(params)
 
 
-def load_entity(file_io):
+def load_document(file_io):
     '''
         Factory function to produce one of supported entities:
             - project

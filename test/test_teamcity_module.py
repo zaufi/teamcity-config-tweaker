@@ -19,7 +19,7 @@
 
 # Project specific imports
 from context import make_data_filename
-from tcct.teamcity import load_entity
+from tcct.teamcity import load_document
 
 # Standard imports
 import pathlib
@@ -29,7 +29,7 @@ import pytest
 class teamcity_entities_tester:
 
     def empty_project_test(self):
-        ent = load_entity(make_data_filename('empty-project-config.xml').open('r'))
+        ent = load_document(make_data_filename('empty-project-config.xml').open('r'))
 
         assert ent.what == 'project'
         assert ent.name == 'Unit Test'
@@ -37,7 +37,7 @@ class teamcity_entities_tester:
 
 
     def non_empty_project_test(self):
-        ent = load_entity(make_data_filename('non-empty-params-project-config.xml').open('r'))
+        ent = load_document(make_data_filename('non-empty-params-project-config.xml').open('r'))
 
         params = ent.parameters
 
