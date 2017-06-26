@@ -71,9 +71,10 @@ def param(ctx, headers, style, input):
 
 
 @ls.command()
+@click.option('--details', '-d', default=False, is_flag=True, help='Show details')
 @click.argument('input', type=click.File('r'), default='-')
 @click.pass_context
-def runners(ctx, input):
+def runners(ctx, details, input):
     '''
         list build runners build configuration or template
     '''
@@ -87,22 +88,33 @@ def runners(ctx, input):
     ctx.obj.log.debug('List build runners from {}{}'.format(doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
     for runner in doc.build_runners:
-        # TODO Get term size?
-        print('---{:-<80}'.format('[ ' + str(runner) + ' ]'))
+        if details:
+            # TODO Get term size?
+            print('---{:-<80}'.format('[ ' + str(runner) + ' ]'))
 
-        if runner.type == 'simpleRunner':
+            if runner.type == 'simpleRunner':
 
-            if 'teamcity.build.workingDir' in runner.parameters:
-                print('Run at `{}`'.format(runner.parameters['teamcity.build.workingDir'].value))
+                if 'teamcity.build.workingDir' in runner.parameters:
+                    print('Run at `{}`'.format(runner.parameters['teamcity.build.workingDir'].value))
 
-            if 'command.executable' in runner.parameters:
-                print('Command: {} {}'.format(runner.parameters['command.executable'].value, runner.parameters['command.parameters'].value))
+                if 'command.executable' in runner.parameters:
+                    print('Command: {} {}'.format(runner.parameters['command.executable'].value, runner.parameters['command.parameters'].value))
 
-            elif 'script.content' in runner.parameters:
-                script = runner.parameters['script.content'].value
-                lexer = pygments.lexers.get_lexer_by_name('shell', stripall=True)
-                formatter = pygments.formatters.get_formatter_by_name('console')
-                script = pygments.highlight(script, lexer, formatter)
-                print('\n' + script)
+                elif 'script.content' in runner.parameters:
+                    script = runner.parameters['script.content'].value
+                    lexer = pygments.lexers.get_lexer_by_name('shell', stripall=True)
+                    formatter = pygments.formatters.get_formatter_by_name('console')
+                    script = pygments.highlight(script, lexer, formatter)
+                    print('\n' + script)
 
-        print()
+                print()
+
+        else:
+            tail = str()
+            if runner.type == 'simpleRunner':
+                tail = runner.parameters['command.executable'].value if 'command.executable' in runner.parameters else 'custom script'
+
+            if tail:
+                tail = ' ({})'.format(tail)
+
+            print('{}{}'.format(str(runner), tail))

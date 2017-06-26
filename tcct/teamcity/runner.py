@@ -56,7 +56,7 @@ class build_runner:
 
 
     def __str__(self):
-        return '{}: {}'.format(self.type, self.name)
+        return '{}: {}'.format(self.type, self.name if self.name else '<unnamed>')
 
 
     def __repr__(self):
