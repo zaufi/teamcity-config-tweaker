@@ -25,6 +25,7 @@ Added
     - ``tcct ls runners``
     - ``tcct rm param``
     - ``tcct ren param``
+    - ``tcct edit runner``
 - Add support for multiline parameter values.
 
 
