@@ -16,7 +16,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Project specific imports
-from ..click import aliases
+from ..click import aliases, aliased_group
 from ..teamcity import load_document
 
 # Standard imports
@@ -28,7 +28,7 @@ import pygments.lexers
 import pygments.formatters
 
 
-@click.group()
+@click.group(cls=aliased_group)
 @aliases('list')
 @click.pass_context
 def ls(ctx):
@@ -54,6 +54,7 @@ def ls(ctx):
   , help='Table style'
   )
 @click.argument('input', type=click.File('r'), default='-')
+@aliases('p', 'params')
 @click.pass_context
 def param(ctx, headers, style, input):
     '''
@@ -63,18 +64,22 @@ def param(ctx, headers, style, input):
 
     ctx.obj.log.debug('List parameters from {}{}'.format(doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
-    aux = {'tablefmt': style }
+    _show_parameters(doc.parameters, headers, style)
 
+
+def _show_parameters(params, headers, style):
+    aux = {'tablefmt': style }
     if headers:
         aux['headers'] = ['key', 'value']
 
-    if len(doc.parameters):
-        print(tabulate.tabulate(list(doc.parameters), **aux))
+    if len(params):
+        print(tabulate.tabulate(list(params), **aux))
 
 
 @ls.command()
 @click.option('--details', '-d', default=False, is_flag=True, help='Show details')
 @click.argument('input', type=click.File('r'), default='-')
+@aliases('ru', 'br')
 @click.pass_context
 def runners(ctx, details, input):
     '''
@@ -110,6 +115,10 @@ def runners(ctx, details, input):
                     print('\n' + script)
 
                 print()
+
+            else:
+                # NOTE For other type of runners, just print its parameters
+                _show_parameters(runner.parameters, True, 'plain')
 
         else:
             tail = str()
