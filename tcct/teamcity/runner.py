@@ -97,7 +97,7 @@ class build_runners_collection:
 
 
     def __setitem__(self, index, value):
-        assert 0
+        assert 0, 'Runners collection do not support set item! Code review required!'
 
 
     def __len__(self):

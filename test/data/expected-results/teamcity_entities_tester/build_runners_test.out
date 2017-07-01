@@ -1,0 +1,9 @@
+runner(repr): 'Simple command build step' [simpleRunner]
+runner(str): simpleRunner: Simple command build step
+script.content=#!/bin/bash
+set -e
+set -x
+
+echo "Hello %unit.test.user%"
+teamcity.step.mode=default
+use.custom.script=true

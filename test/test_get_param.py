@@ -26,48 +26,48 @@ import pathlib
 import pytest
 
 
-class application_tester:
+class get_parameter_tester:
 
-    @argv('--help')
+    @argv('get', 'param', 'test', str(make_data_filename('empty-project-config.xml')))
     @pytest.mark.usefixtures('prepare_cli')
-    def help_test(self, capfd):
+    def not_existed_param_test(self, capfd):
         cli()
-
         out, err = capfd.readouterr()
-        assert 'Usage:' in out
+        assert len(out.strip()) == 0
+        assert len(err.strip()) == 0
 
 
-    @argv('invalid-command')
+    @argv('--fail-if-missed', 'get', 'param', 'test', str(make_data_filename('empty-project-config.xml')))
     @pytest.mark.usefixtures('prepare_cli')
-    def help_test(self, capfd):
+    def fail_if_not_existed_param_test(self, capfd, expected_err):
         cli()
-
         out, err = capfd.readouterr()
-        assert 'Error: No such command "invalid-command".' in err
+        assert len(out.strip()) == 0
+        assert expected_err == err.strip()
 
 
-    @argv('get', 'param', 'whatever', 'not-existed-file')
+    @argv('get', 'param', 'empty-value', str(make_data_filename('multiline-params-project-config.xml')))
     @pytest.mark.usefixtures('prepare_cli')
-    def not_existed_file_test(self, capfd):
+    def empty_value_test(self, capfd):
         cli()
-
         out, err = capfd.readouterr()
-        assert 'Error: Could not open file: not-existed-file: No such file or directory' in err
+        assert len(out.strip()) == 0
+        assert len(err.strip()) == 0
 
 
-    @argv('get', 'param', 'whatever', str(make_data_filename('empty.file')))
+    @argv('get', 'param', 'some-param', str(make_data_filename('multiline-params-project-config.xml')))
     @pytest.mark.usefixtures('prepare_cli')
-    def invlalid_input_test(self, capfd):
+    def non_empty_value_test(self, capfd):
         cli()
-
         out, err = capfd.readouterr()
-        assert 'Error: XML syntax error: Document is empty' in err
+        assert out.strip() == 'some-value'
+        assert len(err.strip()) == 0
 
 
-    @argv('get', 'param', 'whatever', str(make_data_filename('just-a-text.file')))
+    @argv('get', 'param', 'multiline', str(make_data_filename('multiline-params-project-config.xml')))
     @pytest.mark.usefixtures('prepare_cli')
-    def invlalid_input_test(self, capfd):
+    def multiline_value_test(self, capfd):
         cli()
-
         out, err = capfd.readouterr()
-        assert 'Error: XML syntax error: Start tag expected' in err
+        assert out.strip() == 'some\ntest\nvalue'
+        assert len(err.strip()) == 0

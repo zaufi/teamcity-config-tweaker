@@ -115,9 +115,13 @@ def load_document(file_io):
             - build configuration
             - build template
     '''
-    parser = etree.XMLParser(remove_blank_text=True, strip_cdata=False)
-    tree = etree.parse(file_io, parser)
-    root = tree.getroot()
+    try:
+        parser = etree.XMLParser(remove_blank_text=True, strip_cdata=False)
+        tree = etree.parse(file_io, parser)
+        root = tree.getroot()
+
+    except etree.XMLSyntaxError as ex:
+        raise RuntimeError('XML syntax error: {}'.format(str(ex)))
 
     # Check what we have:
     if root.tag == 'project':

@@ -37,7 +37,7 @@ class teamcity_entities_tester:
         assert len(ent.build_runners) == 0
 
 
-    def non_empty_project_test(self):
+    def non_empty_project_test(self, capfd, expected_out):
         ent = load_document(make_data_filename('non-empty-params-project-config.xml').open('r'))
 
         params = ent.parameters
@@ -47,8 +47,9 @@ class teamcity_entities_tester:
 
         # check iteration protocol
         # - iterate over list of parameters
-        for i in params:
-            print('i={}'.format(repr(i)))
+        for param in params:
+            print('param(repr): {}'.format(repr(param)))
+            print('param(str): {}'.format(str(param)))
 
         # - iterate over dict of key-value pairs
         for k, v in params.items():
@@ -100,6 +101,9 @@ class teamcity_entities_tester:
         del params['unknown']
         assert len(params) == 3
 
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+
 
     def multiline_params_project_test(self):
         ent = load_document(make_data_filename('multiline-params-project-config.xml').open('r'))
@@ -107,29 +111,28 @@ class teamcity_entities_tester:
         params = ent.parameters
 
         assert len(params) == 3
-        for k, v in params.items():
-            print('{}={}'.format(k, v))
-
         assert params['some-param'].value == 'some-value'
         assert params['multiline'].value == 'some\ntest\nvalue'
         assert params['empty-param'].value == ''
 
 
-    def build_runners_test(self):
+    def build_runners_test(self, capfd, expected_out):
         ent = load_document(make_data_filename('sample-build-template.xml').open('r'))
 
         runners = ent.build_runners
-        print('runners={}'.format(repr(runners)))
 
         assert len(runners) == 1
 
-        runner = runners[0]
+        # Check interation protocol
+        for runner in runners:
+            print('runner(repr): {}'.format(repr(runner)))
+            print('runner(str): {}'.format(str(runner)))
 
-        print('runner={}'.format(repr(runner)))
-        print('runner.parameters={}'.format(repr(runner.parameters)))
+        runner = runners[0]
 
         # - iterate over dict of key-value pairs
         for k, v in runner.parameters.items():
             print('{}={}'.format(k, v))
 
-        assert 0
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
