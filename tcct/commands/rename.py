@@ -34,11 +34,12 @@ def rename(ctx):
 
 
 @rename.command()
+@click.option('--force', '-v', default=False, is_flag=True, help='Force override possible existed parameter')
 @click.argument('old-name')
 @click.argument('new-name')
 @click.argument('input', type=click.File('r'), default='-')
 @click.pass_context
-def param(ctx, old_name, new_name, input):
+def param(ctx, force, old_name, new_name, input):
     '''
         rename parameter in a project, build configuration or template
     '''
@@ -49,10 +50,9 @@ def param(ctx, old_name, new_name, input):
 
     if old_name in doc.parameters:
         '''
-            .. todo:: Implement via real replace name of the ``param`` element
+            .. todo:: Implement via real replace name attribute of the ``param`` element
         '''
-        doc.parameters[new_name] = doc.parameters[old_name].value
-        del doc.parameters[old_name]
+        doc.parameters.rename(old_name, new_name, force)
 
     elif ctx.obj.fail_if_missed:
         raise RuntimeError('Parameter `{}` not found in {}{}'.format(old_name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
