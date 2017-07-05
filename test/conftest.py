@@ -141,14 +141,37 @@ class _content_check_or_store_pattern:
 
     def __eq__(self, text):
         if self._store:
-            if not self._filename.parent.exists():
-                self._filename.parent.mkdir(parents=True)
+            self._store_pattern_file(text)
 
-            self._filename.write_text(text)
-            return True
+        if not self._filename.exists():
+            warnings.warn('There is no file to match `{}`'.format(self._filename), RuntimeWarning)
+            return False
 
         expected_text = self._filename.read_text().strip()
         return expected_text == text
+
+
+    def match(self, text):
+        if self._store:
+            self._store_pattern_file(text)
+            return True
+
+        if not self._filename.exists():
+            warnings.warn('There is no file to match `{}`'.format(self._filename), RuntimeWarning)
+            return False
+
+        content = ' '.join(self._filename.read_text().strip().splitlines())
+        what = re.compile(content)
+        transformed_text = ' '.join(text.splitlines())
+        return bool(what.match(transformed_text))
+
+
+    def _store_pattern_file(self, text):
+        assert self._store, 'Code review required!'
+        if not self._filename.parent.exists():
+            self._filename.parent.mkdir(parents=True)
+
+        self._filename.write_text(text)
 
 
 def _make_expected_filename(request, ext):
