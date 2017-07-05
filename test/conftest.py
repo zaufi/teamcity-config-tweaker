@@ -88,7 +88,7 @@ def prepare_cli(request, monkeypatch):
     argv = ['tcct']
 
     # Try to add parameters from test class, if present
-    if hasattr(request, 'cls') and request.cls is not None and hasattr(request.cls, 'argv'):
+    if request.cls is not None and hasattr(request.cls, 'argv'):
         argv += request.cls.argv
 
     # Now try to collect parameters given to test method via :fun:`argv` decorator
@@ -121,6 +121,7 @@ def output_dir(request):
       )
     if request.cls is not None:
         result /= request.cls.__name__
+
     result /= request.function.__name__
 
     ensure_fresh_directory(result)
@@ -174,7 +175,7 @@ class _content_check_or_store_pattern:
         self._filename.write_text(text)
 
 
-def _make_expected_filename(request, ext):
+def _make_expected_filename(request, ext: str) -> pathlib.Path:
     result = expected_results_dir()
 
     if request.cls is not None:

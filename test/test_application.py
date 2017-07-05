@@ -39,7 +39,7 @@ class application_tester:
 
     @argv('invalid-command')
     @pytest.mark.usefixtures('prepare_cli')
-    def help_test(self, capfd):
+    def invalid_command_test(self, capfd):
         cli()
 
         out, err = capfd.readouterr()
@@ -57,7 +57,7 @@ class application_tester:
 
     @argv('get', 'param', 'whatever', str(make_data_filename('empty.file')))
     @pytest.mark.usefixtures('prepare_cli')
-    def invlalid_input_test(self, capfd):
+    def invlalid_input_test_1(self, capfd):
         cli()
 
         out, err = capfd.readouterr()
@@ -66,7 +66,7 @@ class application_tester:
 
     @argv('get', 'param', 'whatever', str(make_data_filename('just-a-text.file')))
     @pytest.mark.usefixtures('prepare_cli')
-    def invlalid_input_test(self, capfd):
+    def invlalid_input_test_2(self, capfd):
         cli()
 
         out, err = capfd.readouterr()
