@@ -128,12 +128,13 @@ class parameters_collection:
             TODO Validate key?!
         '''
         param = self._node.find('param[@name="{}"]'.format(key))
+
+        # Add a new parameter node if not found
         if param is None:
-            # Add a new item
-            self._node.append(self._make_param_node(key, value))
-        else:
-            # Update existed
-            parameter(param).value = value
+            param = etree.Element('param', {'name': key, 'value': value})
+            self._node.append(param)
+
+        parameter(param).value = value
 
 
     def __delitem__(self, key):
@@ -157,7 +158,7 @@ class parameters_collection:
         return len(self._node)
 
 
-    def rename(self, old_name, new_name, force_override=True):
+    def rename(self, old_name, new_name, *, force_override=True):
         if old_name == new_name:
             return
 
@@ -168,6 +169,7 @@ class parameters_collection:
         if new_param is None:
             # Ok, just change `name` arrtibute of existed node
             old_param.attrib['name'] = new_name
+
         elif force_override:
             parameter(new_param).value = parameter(old_param).value
             # Copy `spec` attribute if present
@@ -175,11 +177,6 @@ class parameters_collection:
                 new_param.attrib['spec'] = old_param.attrib['spec']
             # Remove `old` node
             self._node.remove(old_param)
+
         else:
             raise RuntimeError('Can not rename: parameter `{}` already exists'.format(new_name))
-
-
-    def _make_param_node(self, name, value):
-        result = etree.Element('param', {'name': name, 'value': value})
-        parameter(result).value = value
-        return result

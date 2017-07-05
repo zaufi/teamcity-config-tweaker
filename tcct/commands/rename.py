@@ -52,7 +52,7 @@ def param(ctx, force, old_name, new_name, input):
         '''
             .. todo:: Implement via real replace name attribute of the ``param`` element
         '''
-        doc.parameters.rename(old_name, new_name, force)
+        doc.parameters.rename(old_name, new_name, force_override=force)
 
     elif ctx.obj.fail_if_missed:
         raise RuntimeError('Parameter `{}` not found in {}{}'.format(old_name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
