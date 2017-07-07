@@ -25,6 +25,7 @@ import pathlib
 import pytest
 import sys
 import unittest.mock
+import warnings
 
 
 # Add CLI option
@@ -140,39 +141,43 @@ class _content_check_or_store_pattern:
         self._store = store
 
 
+    def _store_pattern_handle_error(fn):
+        def _inner(self, text):
+            # Check if `--save-patterns` has given to CLI
+            if self._store:
+                # Make directory to store pattern file if it doesn't exist yet
+                if not self._filename.parent.exists():
+                    self._filename.parent.mkdir(parents=True)
+
+                # Store!
+                self._filename.write_text(text)
+                return True
+
+            # Ok, this is the "normal" check:
+            # - make sure the pattern file exists
+            if not self._filename.exists():
+                warnings.warn('Pattern file not found `{}`'.format(self._filename), RuntimeWarning)
+                return False
+
+            # - call wrapped function to
+            return fn(self, text)
+
+        return _inner
+
+
+    @_store_pattern_handle_error
     def __eq__(self, text):
-        if self._store:
-            self._store_pattern_file(text)
-
-        if not self._filename.exists():
-            warnings.warn('There is no file to match `{}`'.format(self._filename), RuntimeWarning)
-            return False
-
         expected_text = self._filename.read_text().strip()
         return expected_text == text
 
 
+    @_store_pattern_handle_error
     def match(self, text):
-        if self._store:
-            self._store_pattern_file(text)
-            return True
-
-        if not self._filename.exists():
-            warnings.warn('There is no file to match `{}`'.format(self._filename), RuntimeWarning)
-            return False
-
         content = ' '.join(self._filename.read_text().strip().splitlines())
         what = re.compile(content)
         transformed_text = ' '.join(text.splitlines())
         return bool(what.match(transformed_text))
 
-
-    def _store_pattern_file(self, text):
-        assert self._store, 'Code review required!'
-        if not self._filename.parent.exists():
-            self._filename.parent.mkdir(parents=True)
-
-        self._filename.write_text(text)
 
 
 def _make_expected_filename(request, ext: str) -> pathlib.Path:
