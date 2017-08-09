@@ -84,6 +84,7 @@ def _show_parameters(params, headers, style):
 def runners(ctx, details, input):
     '''
         list build runners from a build configuration or template
+        TODO Add `OUTPUT` parameter!
     '''
     doc = load_document(input)
 
@@ -94,10 +95,10 @@ def runners(ctx, details, input):
 
     ctx.obj.log.debug('List build runners from {}{}'.format(doc.what, ' `' + doc.name + '`' if doc.name else str()))
 
-    for runner in doc.build_runners:
+    for idx, runner in enumerate(doc.build_runners):
         if details:
             # TODO Get term size?
-            print('---{:-<80}'.format('[ ' + str(runner) + ' ]'))
+            print('---{:-<80}'.format('[ ' + '{:02}: '.format(idx) + str(runner) + ' ]'))
 
             if runner.type == 'simpleRunner':
 
@@ -128,4 +129,4 @@ def runners(ctx, details, input):
             if tail:
                 tail = ' ({})'.format(tail)
 
-            print('{}{}'.format(str(runner), tail))
+            print('{:02}: {}{}'.format(idx, str(runner), tail))

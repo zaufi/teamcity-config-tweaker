@@ -52,7 +52,7 @@ class application_tester:
         cli()
 
         out, err = capfd.readouterr()
-        assert 'Error: Could not open file: not-existed-file: No such file or directory' in err
+        assert 'Error: Invalid value for "input": Could not open file: not-existed-file: No such file or directory' in err
 
 
     @argv('get', 'param', 'whatever', str(make_data_filename('empty.file')))

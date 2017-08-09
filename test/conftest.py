@@ -84,7 +84,6 @@ def prepare_cli(request, monkeypatch):
         Prepare CLI parameters to ``sys.args``.
         Prevent ``argparse`` to exit if "serivce" options found (like ``--help`).
     '''
-
     # Initial CLI parameters
     argv = ['tcct']
 
@@ -102,6 +101,8 @@ def prepare_cli(request, monkeypatch):
     monkeypatch.setattr(sys, 'argv', argv)
     # Prevent ``click`` from calling ``exit`` function in case of CLI errors
     monkeypatch.setattr(sys, 'exit', lambda *args, **kwargs: 0)
+
+    return None
 
 
 @pytest.fixture
@@ -125,13 +126,7 @@ def output_dir(request):
 
     result /= request.function.__name__
 
-    ensure_fresh_directory(result)
-    undo_action = subst_bsci_build_dir(request, result)
-
-    yield result
-
-    if undo_action is not None:
-        undo_action()
+    return result
 
 
 class _content_check_or_store_pattern:
