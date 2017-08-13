@@ -19,7 +19,6 @@
 
 # Standard imports
 import contextlib
-import inspect
 import os
 import pathlib
 import sys
