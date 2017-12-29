@@ -18,7 +18,181 @@
 # Project specific imports
 
 # Standard imports
+import abc
+import enum
+import functools
+import shlex
 from lxml import etree
+
+@enum.unique
+class parameter_type(enum.IntEnum):
+    UNKNOWN = 0
+    TEXT = 1
+    SELECT = 2
+    CHECKBOX = 3
+    PASSWORD = 4
+    MISSED = -1
+
+    def __str__(self):
+        if self == parameter_type.UNKNOWN:
+            return 'unknown'
+
+        if self == parameter_type.TEXT:
+            return 'text'
+
+        if self == parameter_type.SELECT:
+            return 'select'
+
+        if self == parameter_type.CHECKBOX:
+            return 'checkbox'
+
+        if self == parameter_type.PASSWORD:
+            return 'password'
+
+        if self == parameter_type.MISSED:
+            return '-'
+
+        return '<unexpected: {}>'.format(repr(self))
+
+
+class base_specification(metaclass=abc.ABCMeta):
+
+    def __init__(self, description=None, label=None, display=None, **kwargs):
+        self.description = description
+        self.label = label
+        self.display = False if display == 'hidden' else True
+
+
+    @abc.abstractmethod
+    def kind(self):
+        pass
+
+
+    @abc.abstractmethod
+    def __str__(self):
+        result = ''
+
+        if self.label:
+            result += self.label
+
+        if self.description:
+            result += ('\n' if result else '') + self.description
+
+        return result
+
+
+class text_specification(base_specification):
+
+    def __init__(self, validation_mode=None, **kwargs):
+        super().__init__(**kwargs)
+        self.validation_mode = validation_mode
+        pass
+
+    def kind(self):
+        return parameter_type.TEXT
+
+
+    def __str__(self):
+        return super().__str__()
+
+
+class select_specification(base_specification):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        pass
+
+
+    def kind(self):
+        return parameter_type.SELECT
+
+
+    def __str__(self):
+        return super().__str__()
+
+
+class checkbox_specification(base_specification):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        pass
+
+
+    def kind(self):
+        return parameter_type.CHECKBOX
+
+
+    def __str__(self):
+        return super().__str__()
+
+
+class password_specification(base_specification):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        pass
+
+
+    def kind(self):
+        return parameter_type.PASSWORD
+
+
+    def __str__(self):
+        return super().__str__()
+
+
+class unknown_specification(base_specification):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        pass
+
+
+    def kind(self):
+        return parameter_type.UNKNOWN
+
+
+    def __str__(self):
+        return super().__str__()
+
+
+class missed_specification(base_specification):
+
+    def __init__(self, **kwargs):
+        super().__init__()
+        pass
+
+
+    def kind(self):
+        return parameter_type.MISSED
+
+
+    def __str__(self):
+        return '-'
+
+
+class specification:
+
+    _TEXT2TYPE = {
+        'text': text_specification
+      , 'select': select_specification
+      , 'checkbox': select_specification
+      , 'password': password_specification
+      }
+
+    def __new__(cls, text):
+        kind, _, rest = text.partition(' ')
+        rest = rest.replace("|'", "&quot;")
+
+        if kind in specification._TEXT2TYPE:
+            make_pair = lambda k, _, v: (k, v)
+            return specification._TEXT2TYPE[kind](
+                **dict([
+                    *map(lambda i: make_pair(*i.partition('=')), shlex.split(rest))
+                  ])
+              )
+
+        return unknown_specification()
 
 
 class parameter:
@@ -46,6 +220,15 @@ class parameter:
         return self._node.text
 
 
+    @property
+    def spec(self):
+        '''
+            Read-only `spec` property.
+            TODO Make it writable
+        '''
+        return self.__get_spec()
+
+
     @value.setter
     def value(self, val):
         _value = str(val).strip()
@@ -64,6 +247,10 @@ class parameter:
         yield self.name
         yield self.value
 
+        my_spec = self.__get_spec()
+        yield str(my_spec.kind()) if my_spec is not None else '-'
+        yield my_spec if my_spec else '-'
+
 
     def __len__(self):
         return 2
@@ -75,6 +262,17 @@ class parameter:
 
     def __repr__(self):
         return '{}=`{}`'.format(self.name, self.value)
+
+
+    def __get_spec(self):
+        '''
+            Read-only `spec` property.
+            TODO Make it writable
+        '''
+        if 'spec' in self._node.attrib:
+            return specification(self._node.attrib['spec'])
+
+        return missed_specification()
 
 
 class _parameter_iterator:

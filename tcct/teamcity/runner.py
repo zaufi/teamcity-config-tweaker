@@ -56,11 +56,11 @@ class build_runner:
 
 
     def __str__(self):
-        return '{}: {}'.format(self.type, self.name if self.name else '<unnamed>')
+        return '{}: {} [{}]'.format(self.type, self.name if self.name else '<unnamed>', self._node.attrib['id'])
 
 
     def __repr__(self):
-        return '{} [{}]'.format(repr(self.name), self.type)
+        return '{} [{}, {}]'.format(repr(self.name), self.type, self._node.attrib['id'])
 
 
 class _build_runner_iterator:

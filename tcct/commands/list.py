@@ -70,7 +70,7 @@ def param(ctx, headers, style, input):
 def _show_parameters(params, headers, style):
     aux = {'tablefmt': style }
     if headers:
-        aux['headers'] = ['key', 'value']
+        aux['headers'] = ['name', 'value', 'type', 'spec']
 
     if len(params):
         print(tabulate.tabulate(list(params), **aux))
