@@ -378,3 +378,7 @@ class parameters_collection:
 
         else:
             raise RuntimeError('Can not rename: parameter `{}` already exists'.format(new_name))
+
+
+    def clear(self):
+        self._node.clear()

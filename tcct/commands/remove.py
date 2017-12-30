@@ -19,8 +19,11 @@
 from ..click import aliases
 from ..teamcity import load_document
 
-# Standard imports
+# Third-party imports
 import click
+
+# Standard imports
+import fnmatch
 
 
 @click.group()
@@ -51,6 +54,34 @@ def param(ctx, name, input):
 
     elif ctx.obj.fail_if_missed:
         raise RuntimeError('Parameter `{}` not found in {}{}'.format(name, doc.what, ' `' + doc.name + '`' if doc.name else str()))
+
+    # Print result
+    print(str(doc))
+
+
+@remove.command()
+@click.argument('pattern')
+@click.argument('input', type=click.File('r'), default='-')
+@click.pass_context
+def params(ctx, pattern, input):
+    '''
+        remove parameters matching a given pattern from a project,
+        build configuration or template
+
+        TODO Tests
+    '''
+
+    doc = load_document(input)
+
+    ctx.obj.log.debug('Removing parameters matching pattern `{}` from {}{}'.format(pattern, doc.what, ' `' + doc.name + '`' if doc.name else str()))
+
+    if pattern == 'all' or pattern == '*':
+        doc.parameters.clear()
+    else:
+        for param in doc.parameters:
+            if fnmatch.fnmatch(param.name, pattern):
+                ctx.obj.log.debug('Removing `{}`'.format(param.name))
+                del doc.parameters[param.name]
 
     # Print result
     print(str(doc))
