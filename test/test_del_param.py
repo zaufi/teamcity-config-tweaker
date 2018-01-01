@@ -80,3 +80,41 @@ class del_parameter_tester:
         out, err = capfd.readouterr()
         assert expected_out == out.strip()
         assert len(err.strip()) == 0
+
+
+class remove_all_parameters_tester:
+
+    @argv('del', 'params', 'all', str(make_data_filename('multiline-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def delete_all_params_test(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+        assert len(err.strip()) == 0
+
+
+    @argv('del', 'params', 'blah.*', str(make_data_filename('many-similar-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def delete_blah_params_test(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+        assert len(err.strip()) == 0
+
+
+    @argv('del', 'params', '*.test.*', str(make_data_filename('many-similar-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def delete_star_test_star_params_test(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+        assert len(err.strip()) == 0
+
+
+    @argv('del', 'params', '*.*e', str(make_data_filename('many-similar-params-project-config.xml')))
+    @pytest.mark.usefixtures('prepare_cli')
+    def delete_star_star_e_params_test(self, capfd, expected_out):
+        cli()
+        out, err = capfd.readouterr()
+        assert expected_out == out.strip()
+        assert len(err.strip()) == 0
