@@ -1,5 +1,5 @@
-runner(repr): 'Simple command build step' [simpleRunner]
-runner(str): simpleRunner: Simple command build step
+runner(repr): 'Simple command build step' [simpleRunner, RUNNER_1]
+runner(str): simpleRunner: Simple command build step [RUNNER_1]
 script.content=#!/bin/bash
 set -e
 set -x
