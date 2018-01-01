@@ -39,7 +39,31 @@ To add multiple parameters and replace files:
 
 ::
 
-    $ ls */*/*VS14_x64.xml | while read f; do tcct add param build.vs.version 14 $f | tcct add param build.vs.year 2015 > $f.tmp && mv $f.tmp $f; done
+    $ ls */*/*VS14_x64.xml \
+      | while read f; do \
+            tcct add param build.vs.version 14 $f \
+          | tcct add param build.vs.year 2015 > $f.tmp && mv $f.tmp $f; \
+        done
+
+
+List parameter from a bunch of configurations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    $ ls *_Release/*/*@(CentOS|RHEL)*.xml \
+      | while read f; do \
+            value=$(tcct get param dependencies.repo.path $f); \
+            padding_len=$((80 - ${#f})); \
+            padding=$(printf ' %.0s' $(seq 1 ${padding_len})); \
+            echo -e "$f:${padding}$value"; \
+        done
+
+To get list of all parameters at project's level:
+
+::
+
+    $ ls *_Windows/project-config.xml | while read f; do echo -e "\n$f"; tcct ls param $f; done
 
 
 .. To be continued
