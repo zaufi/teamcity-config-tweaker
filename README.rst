@@ -70,7 +70,7 @@ To get list of all parameters at project's level:
 
 .. To be continued
 
-.. |Build Status| image:: https://travis-ci.org/zaufi/pytest-matcher.svg?branch=master
-   :target: https://travis-ci.org/zaufi/pytest-matcher
+.. |Build Status| image:: https://travis-ci.org/zaufi/teamcity-config-tweaker.svg?branch=master
+   :target: https://travis-ci.org/zaufi/teamcity-config-tweaker
 .. |nbsp| unicode:: 0xA0
    :trim:
