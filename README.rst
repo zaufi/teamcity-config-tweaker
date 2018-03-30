@@ -1,6 +1,8 @@
 What is this
 ============
 
+|Build Status|
+
 TeamCity Configuration Tweaker is a tool aimed to help in mass-editing of build
 configurations (via XML files) to do things, that is really hard to do via web UI,
 which is mostly *single thing* oriented.
@@ -67,3 +69,8 @@ To get list of all parameters at project's level:
 
 
 .. To be continued
+
+.. |Build Status| image:: https://travis-ci.org/zaufi/pytest-matcher.svg?branch=master
+   :target: https://travis-ci.org/zaufi/pytest-matcher
+.. |nbsp| unicode:: 0xA0
+   :trim:
